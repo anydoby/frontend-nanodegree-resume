@@ -8,6 +8,19 @@ var work = {
 		{"employer":"Asset Control", "dates": '2009-04-01 -  now', "title": "Tech Lead", "location":"Heerenveen", "description" : lorem},
 	]
 };
+work.display = function(){
+	function displayWork (job) {
+		$('#workExperience').append(HTMLworkStart);
+		$('.work-entry:last').append(HTMLworkEmployer.replace('%data%',job.employer));
+		$('.work-entry:last').append(HTMLworkTitle.replace('%data%',job.title));
+		$('.work-entry:last').append(HTMLworkDates.replace('%data%',job.dates));
+		$('.work-entry:last').append(HTMLworkLocation.replace('%data%',job.location));
+		$('.work-entry:last').append(HTMLworkDescription.replace('%data%',job.description));
+	}
+	if (this.jobs) {
+		this.jobs.forEach(displayWork);
+	}
+};
 
 var bio = {
 	"name": "Sergey Zolotaryov",
@@ -37,31 +50,40 @@ var education = {
 var projects = {
 	"projects": [
 		{"title":'Sample Project 1', "dates": 2014, "description": lorem,
-	"images": ['https://s3.amazonaws.com/content.udacity-data.com/site-svgs/upsell_icon.svg']}
+		"images": ['https://s3.amazonaws.com/content.udacity-data.com/site-svgs/upsell_icon.svg']}
 	]
 };
+
+projects.display = function() {
+	if (this.projects){
+		this.projects.forEach(function(project) {
+			$('#projects').append(HTMLprojectStart);
+			$('.project-entry:last').append(HTMLprojectTitle.replace('%data%', project.title));
+			$('.project-entry:last').append(HTMLprojectDates.replace('%data%', project.dates));
+			$('.project-entry:last').append(HTMLprojectDescription.replace('%data%', project.description));
+			project.images.forEach(function(img){$('.project-entry:last').append(HTMLprojectImage.replace('%data%', img));});			
+		});
+	}
+};
+
+function inName(){
+	var n = bio.name.split(" ");
+	return n[0].slice(0,1).toUpperCase() + n[0].slice(1) + " " + n[1].toUpperCase();
+}
+
+
 
 $('#header').append(HTMLheaderName.replace('%data%', bio.name));
 $('#header').append(HTMLheaderRole.replace('%data%', bio.role));
 
-if (bio.skills){
+if (bio.skills) {
 	$('#header').append(HTMLskillsStart);
 	bio.skills.forEach(function (skill) {
 		$('#skills').append(HTMLskills.replace('%data%',skill));
 	});
 }
 
-function displayWork (job){
-	$('#workExperience').append(HTMLworkStart);
-	$('.work-entry:last').append(HTMLworkEmployer.replace('%data%',job.employer));
-	$('.work-entry:last').append(HTMLworkTitle.replace('%data%',job.title));
-	$('.work-entry:last').append(HTMLworkDates.replace('%data%',job.dates));
-	$('.work-entry:last').append(HTMLworkLocation.replace('%data%',job.location));
-	$('.work-entry:last').append(HTMLworkDescription.replace('%data%',job.description));
-}
+work.display();
+projects.display();
 
-if (work.jobs){
-	work.jobs.forEach(displayWork);
-}
-
-
+$('#mapDiv').append(googleMap);
